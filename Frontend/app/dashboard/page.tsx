@@ -3,7 +3,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import Image from 'next/image';
-import { Users, LogOut, Activity, BarChart3, Loader2 } from 'lucide-react';
+import { LogOut, Loader2 } from 'lucide-react';
+import OverviewTab from './components/OverviewTab';
+import DataAgentTab from './components/DataAgentTab';
+import MediationAgentTab from './components/MediationAgentTab';
+import RatingEngineTab from './components/RatingEngineTab';
+import AnomalyDetectionTab from './components/AnomalyDetectionTab';
+import ActionAgentTab from './components/ActionAgentTab';
+import ImpactDashboardTab from './components/ImpactDashboardTab';
 
 interface User {
   id: number;
@@ -36,6 +43,18 @@ export default function Dashboard() {
     router.push('/login');
   };
 
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', number: null },
+    { id: 'data-agent', label: 'Data Agent', number: 1 },
+    { id: 'mediation-agent', label: 'Mediation Agent', number: 2 },
+    { id: 'rating-engine', label: 'Rating Engine', number: 3 },
+    { id: 'anomaly-detection', label: 'Anomaly Detection', number: 4 },
+    { id: 'action-agent', label: 'Action Agent', number: 5 },
+    { id: 'impact-dashboard', label: 'Impact Dashboard', number: null },
+  ];
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
@@ -45,8 +64,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100">
-      <nav className="bg-[#0a0c1a] border-b border-gray-800/50 sticky top-0 z-50">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
+      <nav className="bg-[#0a0c1a] border-b border-gray-800/60 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Left Section: Logo & Titles */}
@@ -56,9 +75,8 @@ export default function Dashboard() {
                 <Image 
                   src="/corp_logo.svg" 
                   alt="CenturyLink Logo" 
-                  width={140} 
+                  width={160} 
                   height={40} 
-                  className="h-9 w-auto object-contain"
                   priority
                 />
               </div>
@@ -73,7 +91,7 @@ export default function Dashboard() {
             {/* Right Section: User Profile */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-4 border-l border-gray-800 pl-6 py-2">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#7c3aed] to-[#4f46e5] flex items-center justify-center border-2 border-white/10 shadow-lg shadow-purple-500/10">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center border-2 border-white/10 shadow-md">
                   <span className="text-white font-bold text-xl">
                     {user?.name?.charAt(0).toUpperCase()}
                   </span>
@@ -82,7 +100,7 @@ export default function Dashboard() {
                   <span className="text-white font-bold text-sm tracking-wide">{user?.name}</span>
                   <button
                     onClick={handleLogout}
-                    className="group flex items-center justify-end gap-1.5 text-[#3b82f6] hover:text-white text-[10px] font-black tracking-widest uppercase transition-all mt-0.5"
+                    className="group flex items-center justify-end gap-1.5 text-blue-400 hover:text-white text-[10px] font-black tracking-widest uppercase transition-all mt-0.5"
                   >
                     SIGN OUT
                     <LogOut className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
@@ -94,60 +112,45 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold">Welcome back, {user?.name?.split(' ')[0]}</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">Here is the overview of your telecom sub-systems.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-700 dark:text-gray-300">Total Subscribers</h3>
-              <Users className="w-5 h-5 text-blue-500" />
-            </div>
-            <p className="text-3xl font-bold">124,592</p>
-            <p className="text-sm text-green-500 font-medium mt-2">+2.4% from last month</p>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-700 dark:text-gray-300">System Uptime</h3>
-              <Activity className="w-5 h-5 text-green-500" />
-            </div>
-            <p className="text-3xl font-bold">99.98%</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">All nodes operational</p>
-          </div>
-
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-700 dark:text-gray-300">Detected Anomalies</h3>
-              <BarChart3 className="w-5 h-5 text-red-500" />
-            </div>
-            <p className="text-3xl font-bold text-red-600 dark:text-red-500">14</p>
-            <p className="text-sm text-red-500/80 font-medium mt-2">Requires immediate attention</p>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-200 dark:border-gray-800">
-            <h3 className="font-semibold">Recent Alerts</h3>
-          </div>
-          <div className="divide-y divide-gray-100 dark:divide-gray-800/60">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                  <div>
-                    <p className="text-sm font-medium">Unusual billing pattern detected in Region {i}</p>
-                    <p className="text-xs text-gray-500 mt-1">2 hours ago via Automated Scan</p>
-                  </div>
-                </div>
-                <button className="text-sm text-primary-600 font-medium hover:text-primary-500">Review</button>
-              </div>
+      {/* Secondary Tab Navigation (Pill-shaped) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex items-center justify-center">
+          <div className="bg-white border border-slate-200 rounded-full p-1.5 flex items-center gap-1 shadow-sm">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`
+                  relative flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300
+                  ${activeTab === tab.id 
+                    ? 'bg-slate-900 text-white shadow-md scale-105 z-10' 
+                    : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                  }
+                `}
+              >
+                {tab.label}
+                {tab.number && (
+                  <span className={`
+                    flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold
+                    ${activeTab === tab.id ? 'bg-white text-slate-900' : 'bg-slate-100 text-slate-500'}
+                  `}>
+                    {tab.number}
+                  </span>
+                )}
+              </button>
             ))}
           </div>
         </div>
+      </div>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        {activeTab === 'overview' && <OverviewTab />}
+        {activeTab === 'data-agent' && <DataAgentTab />}
+        {activeTab === 'mediation-agent' && <MediationAgentTab />}
+        {activeTab === 'rating-engine' && <RatingEngineTab />}
+        {activeTab === 'anomaly-detection' && <AnomalyDetectionTab />}
+        {activeTab === 'action-agent' && <ActionAgentTab />}
+        {activeTab === 'impact-dashboard' && <ImpactDashboardTab />}
       </main>
     </div>
   );
