@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from service.database import init_db
 from feature.auth.router import router as auth_router
 
+# Initialize the psycopg2 database tables
 init_db()
 
 app = FastAPI(title="Century Link Revenue Assurance API")

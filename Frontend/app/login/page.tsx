@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
-import { Shield, ArrowRight, Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Login() {
@@ -34,10 +35,17 @@ export default function Login() {
       
       <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-8 relative z-10 transition-all">
         <div className="text-center mb-10">
-          <div className="bg-primary-50 dark:bg-primary-900/40 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary-100 dark:border-primary-900 border-b-4">
-            <Shield className="w-8 h-8 text-primary-600 dark:text-primary-500" />
+          <div className="bg-white w-full py-4 rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+            <Image 
+              src="/corp_logo.svg" 
+              alt="CenturyLink Logo" 
+              width={180} 
+              height={50} 
+              className="h-10 w-auto object-contain"
+              priority
+            />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Century Link Portal</h1>
+          {/* <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Century Link Portal</h1> */}
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Revenue Assurance & Billing Anomaly System</p>
         </div>
 
@@ -49,11 +57,11 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Corporate Email</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
             <input
               type="email"
               required
-              className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all placeholder-gray-400"
+              className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all placeholder-gray-400 text-gray-900 dark:text-white"
               placeholder="user@centurylink.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -64,7 +72,7 @@ export default function Login() {
             <input
               type="password"
               required
-              className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all placeholder-gray-400"
+              className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all placeholder-gray-400 text-gray-900 dark:text-white"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -86,8 +94,8 @@ export default function Login() {
         </form>
 
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
-          Don't have an enterprise account?{' '}
-          <Link href="/signup" className="text-primary-600 hover:text-primary-400 font-semibold transition-colors">Request Access</Link>
+          Don't have an account?{' '}
+          <Link href="/signup" className="text-primary-600 hover:text-primary-400 font-semibold transition-colors">Create Account</Link>
         </p>
       </div>
     </div>

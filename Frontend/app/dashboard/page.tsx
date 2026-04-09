@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
-import { Shield, Users, LogOut, Activity, BarChart3, Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { Users, LogOut, Activity, BarChart3, Loader2 } from 'lucide-react';
 
 interface User {
   id: number;
@@ -45,34 +46,49 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans text-gray-900 dark:text-gray-100">
-      <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
+      <nav className="bg-[#0a0c1a] border-b border-gray-800/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary-600 p-2 rounded-xl border border-primary-500/50">
-                <Shield className="w-5 h-5 text-white" />
+          <div className="flex justify-between items-center h-20">
+            {/* Left Section: Logo & Titles */}
+            <div className="flex items-center gap-6">
+              {/* Logo Container */}
+              <div className="bg-white rounded-2xl py-2 px-4 flex items-center shadow-xl shadow-white/5 border border-white/10">
+                <Image 
+                  src="/corp_logo.svg" 
+                  alt="CenturyLink Logo" 
+                  width={140} 
+                  height={40} 
+                  className="h-9 w-auto object-contain"
+                  priority
+                />
               </div>
-              <span className="font-bold text-xl tracking-tight hidden sm:block">Century Link Revenue Assurance</span>
+
+              {/* Page Titles */}
+              <div className="flex flex-col">
+                <h2 className="text-white font-bold text-xl leading-snug">Revenue Assurance & Billing Anomaly Detection</h2>
+                <p className="text-gray-400 text-sm font-medium">AI-Powered Multi-Agent Platform</p>
+              </div>
             </div>
+
+            {/* Right Section: User Profile */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 mr-4">
-                <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center border border-primary-200 dark:border-primary-800">
-                  <span className="text-primary-700 dark:text-primary-400 font-bold text-sm">
+              <div className="flex items-center gap-4 border-l border-gray-800 pl-6 py-2">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#7c3aed] to-[#4f46e5] flex items-center justify-center border-2 border-white/10 shadow-lg shadow-purple-500/10">
+                  <span className="text-white font-bold text-xl">
                     {user?.name?.charAt(0).toUpperCase()}
                   </span>
                 </div>
-                <div className="text-sm font-medium hidden md:block">
-                  <p className="leading-none">{user?.name}</p>
-                  <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">{user?.email}</p>
+                <div className="flex flex-col text-right">
+                  <span className="text-white font-bold text-sm tracking-wide">{user?.name}</span>
+                  <button
+                    onClick={handleLogout}
+                    className="group flex items-center justify-end gap-1.5 text-[#3b82f6] hover:text-white text-[10px] font-black tracking-widest uppercase transition-all mt-0.5"
+                  >
+                    SIGN OUT
+                    <LogOut className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={handleLogout}
-                className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                title="Logout"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
             </div>
           </div>
         </div>
