@@ -1,0 +1,9 @@
+fastapi[standard]
+psycopg2-binary
+passlib[bcrypt]
+python-jose[cryptography]
+pydantic
+pydantic-settings
+python-dotenv
+langchain-groq
+langchain-core
