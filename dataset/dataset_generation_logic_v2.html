@@ -1,0 +1,377 @@
+
+<style>
+* { box-sizing: border-box; }
+.wrap { padding: 0.5rem 0 1.5rem; }
+.section-label { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--color-text-tertiary); margin: 16px 0 8px; }
+.step-card { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-lg); margin-bottom: 10px; overflow: hidden; }
+.step-header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.step-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+.step-title { font-size: 13px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.step-dep { font-size: 11px; color: var(--color-text-tertiary); font-family: var(--font-mono); }
+.step-body { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
+.rule { display: flex; gap: 8px; font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+.rule-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-border-primary); flex-shrink: 0; margin-top: 5px; }
+.rule strong { color: var(--color-text-primary); font-weight: 500; }
+.code-block { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 8px 10px; font-family: var(--font-mono); font-size: 11px; color: var(--color-text-primary); line-height: 1.7; margin: 4px 0; white-space: pre; }
+.fix-badge { font-size: 10px; font-weight: 500; border-radius: 20px; padding: 2px 8px; border: 0.5px solid; white-space: nowrap; margin-left: auto; }
+.fix-new  { background: #FCEBEB; border-color: #F09595; color: #A32D2D; }
+.fix-imp  { background: #FAEEDA; border-color: #EF9F27; color: #633806; }
+.fix-ok   { background: #EAF3DE; border-color: #97C459; color: #27500A; }
+.s1 { background: #EAF3DE; color: #27500A; }
+.s2 { background: #E6F1FB; color: #0C447C; }
+.s3 { background: #FAEEDA; color: #633806; }
+.s4 { background: #EEEDFE; color: #3C3489; }
+.s5 { background: #FCEBEB; color: #A32D2D; }
+.s6 { background: #E1F5EE; color: #085041; }
+.s7 { background: #FAC775; color: #412402; }
+.s8 { background: #F4C0D1; color: #4B1528; }
+hr.div { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 14px 0 8px; }
+.inline-tag { font-size: 10px; font-family: var(--font-mono); padding: 1px 6px; border-radius: 3px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); color: var(--color-text-secondary); }
+.flow-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 6px 0 12px; }
+.flow-box { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: 4px; border: 0.5px solid; }
+.flow-arrow { color: var(--color-text-tertiary); font-size: 12px; }
+.sub-header { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); margin: 6px 0 2px; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+
+<h2 class="sr-only">Complete dataset generation logic plan v2 — all 8 steps with fixes applied</h2>
+<div class="wrap">
+
+<p class="section-label">Final generation order</p>
+<div class="flow-row">
+  <span class="flow-box s1">1 Customer</span><span class="flow-arrow">→</span>
+  <span class="flow-box s1">2 Tariff Plan</span><span class="flow-arrow">→</span>
+  <span class="flow-box s1">3 Tariff Rate</span><span class="flow-arrow">→</span>
+  <span class="flow-box s2">4 Plan History</span><span class="flow-arrow">→</span>
+  <span class="flow-box s2">5 Billing Cycle</span><span class="flow-arrow">→</span>
+  <span class="flow-box s3">6 CDR</span><span class="flow-arrow">→</span>
+  <span class="flow-box s5">7 Mediation</span><span class="flow-arrow">→</span>
+  <span class="flow-box s3">8 SMS + Data Session</span><span class="flow-arrow">→</span>
+  <span class="flow-box s4">9 Billing Record</span>
+</div>
+
+<!-- STEP 1 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s1">1</span>
+    <span class="step-title">Customer</span>
+    <span class="step-dep">depends on: nothing</span>
+    <span class="fix-badge fix-imp">2 field fixes</span>
+  </div>
+  <div class="step-body">
+    <div class="rule"><span class="rule-dot"></span><div>200 customers. Mix: <strong>60% prepaid, 40% postpaid</strong></div></div>
+    <div class="rule"><span class="rule-dot"></span><div><strong>gender → "Male" / "Female"</strong> (not M/F)</div></div>
+    <div class="rule"><span class="rule-dot"></span><div><strong>device_type → realistic values:</strong> <span class="inline-tag">5G Smartphone</span> <span class="inline-tag">4G Smartphone</span> <span class="inline-tag">Keypad Phone</span> <span class="inline-tag">IoT Device</span> <span class="inline-tag">JioPhone</span> <span class="inline-tag">Dongle</span></div></div>
+    <div class="rule"><span class="rule-dot"></span><div><strong>roaming_enabled</strong> derived from plan: if plan has roaming_included=True → True, else 10% chance True for others</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>account_status: 85% active, 10% suspended, 5% churned. Churned get deactivation_date in the past.</div></div>
+    <div class="sub-header">Field values</div>
+    <div class="code-block">gender       : "Male" | "Female"
+device_type  : "5G Smartphone" | "4G Smartphone" | "Keypad Phone"
+               | "IoT Device" | "JioPhone" | "Dongle"
+account_status: "active"(85%) | "suspended"(10%) | "churned"(5%)
+credit_limit : NULL for prepaid, ₹500–₹5000 for postpaid
+billing_cycle_day: from [1, 5, 10, 15, 20, 25]</div>
+  </div>
+</div>
+
+<!-- STEP 2+3 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s1">2</span>
+    <span class="step-title">Tariff Plan + Tariff Rate</span>
+    <span class="step-dep">depends on: nothing</span>
+    <span class="fix-badge fix-ok">unchanged</span>
+  </div>
+  <div class="step-body">
+    <div class="rule"><span class="rule-dot"></span><div>24 real Jio-based plans already designed. Keep as-is.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>Tariff Rate: 4 rows per plan (voice-local, voice-STD, SMS, data). Each rate has <strong>pulse_seconds</strong> — this is used in step 6 billing logic.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>Rate rows to store: <strong>rate_per_unit, charging_unit, pulse_seconds, overage_rate, free_unit_applicable</strong></div></div>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s2">4</span>
+    <span class="step-title">Customer Plan History — time-aware mapping</span>
+    <span class="step-dep">depends on: customer, tariff_plan</span>
+    <span class="fix-badge fix-ok">unchanged</span>
+  </div>
+  <div class="step-body">
+    <div class="rule"><span class="rule-dot"></span><div>Every customer → at least 1 row (current plan). 15% of customers get 2 rows (mid-period upgrade/downgrade).</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>Rows must be <strong>non-overlapping date ranges</strong>. Row 1: activation_date → change_date-1. Row 2: change_date → NULL.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>is_current_plan=True only on the latest row. previous_plan_id links to the prior plan_id.</div></div>
+    <div class="sub-header">Key lookup function built from this table</div>
+    <div class="code-block">def get_active_plan(customer_id, event_datetime):
+    rows = plan_history.filter(customer_id)
+                       .sort_by(activation_date)
+    for row in rows:
+        if row.activation_date <= event_datetime:
+            if row.expiry_date is None or row.expiry_date >= event_datetime:
+                return row.plan_id
+    return customer.current_plan_id   # fallback</div>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s2">5</span>
+    <span class="step-title">Billing Cycle — one row per customer per month</span>
+    <span class="step-dep">depends on: customer</span>
+    <span class="fix-badge fix-ok">unchanged</span>
+  </div>
+  <div class="step-body">
+    <div class="rule"><span class="rule-dot"></span><div>3 months: Jan, Feb, Mar 2024. Each active/suspended customer → 3 rows.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>cycle_start derived from customer.billing_cycle_day — customer billed on day 10 → cycle is 10-Jan to 9-Feb.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>total_amount filled in last pass after billing_record is computed.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>billing_status: 70% generated, 25% paid, 5% disputed. payment_status: paid / unpaid / overdue.</div></div>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s3">6</span>
+    <span class="step-title">CDR — with active plan lookup + roaming guard</span>
+    <span class="step-dep">depends on: customer, plan_history, tariff_plan</span>
+    <span class="fix-badge fix-new">FIX 1 + FIX 6</span>
+  </div>
+  <div class="step-body">
+    <div class="sub-header">Fix 1 — Active plan lookup per CDR</div>
+    <div class="code-block">for each CDR:
+    plan_id = get_active_plan(customer_id, event_start_time)
+    # store plan_id_at_event on CDR row
+    # this is what rating engine uses — NOT customer.plan_id</div>
+
+    <div class="sub-header">Fix 6 — Roaming guard</div>
+    <div class="code-block">if event_type == "roaming":
+    if NOT customer.roaming_enabled:
+        reassign event_type = "voice"   # cannot roam
+    if NOT plan.roaming_included:
+        roaming_charge applies separately at roaming rate</div>
+
+    <div class="sub-header">CDR field rules</div>
+    <div class="rule"><span class="rule-dot"></span><div>For voice: <strong>call_type</strong> = local(70%) / STD(25%) / ISD(5%). <strong>inter_operator_flag</strong> = True for 20% of voice CDRs.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>For data: uplink = 20% of total bytes, downlink = 80%. Store both separately.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>For SMS: sms_count = 1 per CDR row. segment logic handled in sms_detail table.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>event_start_time must fall within the billing cycle window of the cycle_id stored on the CDR.</div></div>
+    <div class="rule"><span class="rule-dot"></span><div>record_status: 94% valid, 3% duplicate, 2% invalid, 1% missing (absent from CDR entirely — creates gap).</div></div>
+  </div>
+</div>
+
+<!-- STEP 7 NEW -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s5">7</span>
+    <span class="step-title">Mediation Record — simulate mediation layer effects</span>
+    <span class="step-dep">depends on: CDR</span>
+    <span class="fix-badge fix-new">NEW — Fix 5</span>
+  </div>
+  <div class="step-body">
+    <div class="rule"><span class="rule-dot"></span><div>One mediation_record per CDR row — even rejected ones get a row (with processing_status = rejected).</div></div>
+    <div class="sub-header">Processing status logic</div>
+    <div class="code-block">if cdr.record_status == "duplicate":
+    mediation.processing_status = "duplicate"
+    mediation.duplicate_flag    = True
+
+elif cdr.record_status == "invalid":
+    mediation.processing_status = "rejected"
+    mediation.rejection_reason  = random choice from rejection codes
+
+elif random() < 0.01:          # 1% of valid CDRs fail mediation
+    mediation.processing_status = "rejected"
+    mediation.rejection_reason  = "transformation_error"
+
+else:
+    mediation.processing_status = "success"
+    mediation.normalized_usage_value = apply_normalization(cdr)
+    mediation.rated_units = apply_pulse(cdr, plan)</div>
+
+    <div class="sub-header">Normalization logic</div>
+    <div class="code-block">For voice:
+    normalized_usage_value = duration_seconds       (raw seconds)
+    rated_units = ceil(duration_seconds / pulse_seconds) * pulse_seconds
+    # e.g. 125 sec, pulse=60 → ceil(125/60)=3 → rated_units = 180 sec
+
+For data:
+    normalized_usage_value = (uplink + downlink) / (1024*1024)  # → MB
+    rated_units = normalized_usage_value                         # per MB
+
+For SMS:
+    normalized_usage_value = sms_count
+    rated_units = segment_count from sms_detail (fetched later)  </div>
+
+    <div class="sub-header">Rejection reason codes</div>
+    <div class="code-block">RC001 = missing_mandatory_field
+RC002 = invalid_duration (duration <= 0)
+RC003 = future_timestamp
+RC004 = unknown_subscriber
+RC005 = transformation_error
+RC006 = duplicate_sequence_number</div>
+  </div>
+</div>
+
+<!-- STEP 8 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s3">8</span>
+    <span class="step-title">SMS Detail + Data Session</span>
+    <span class="step-dep">depends on: CDR (valid mediation records only)</span>
+    <span class="fix-badge fix-imp">Fix 2 partial</span>
+  </div>
+  <div class="step-body">
+    <div class="sub-header">SMS Detail — segment logic</div>
+    <div class="code-block">segment_count = 1   (88% of SMS)
+              = 2   (9%)
+              = 3   (3%)
+
+# Billing implication stored here:
+billable_sms_units = segment_count
+# A 3-segment SMS = 3 SMS charges — this must flow into billing_line_item</div>
+
+    <div class="sub-header">Data Session — per-day FUP logic</div>
+    <div class="code-block"># Fix 3 — Daily FUP, not monthly multiplication
+for each data CDR in a billing cycle:
+    day_key = (customer_id, date(event_start_time))
+    daily_usage_mb[day_key] += session_mb
+
+    if daily_usage_mb[day_key] > plan.daily_data_mb:
+        fup_triggered = True
+        throttled_bytes = bytes consumed AFTER daily limit was hit
+        throttled_flag  = True
+    else:
+        fup_triggered = False
+        throttled_flag = False</div>
+  </div>
+</div>
+
+<!-- STEP 9 -->
+<div class="step-card">
+  <div class="step-header">
+    <span class="step-num s4">9</span>
+    <span class="step-title">Billing Record — complete correct logic + noise injection</span>
+    <span class="step-dep">depends on: mediation_record (success rows only), tariff_rate, plan_history</span>
+    <span class="fix-badge fix-new">Fix 2 + Fix 4 + Fix 5</span>
+  </div>
+  <div class="step-body">
+    <div class="sub-header">Step A — Use ONLY successfully mediated CDRs</div>
+    <div class="code-block">billable_cdrs = mediation_records
+                .filter(customer_id, billing_cycle_id)
+                .filter(processing_status == "success")
+# Rejected + duplicate mediation rows are excluded from billing
+# This is how mediation layer creates revenue leakage</div>
+
+    <div class="sub-header">Step B — Voice charge with pulse rounding (Fix 2)</div>
+    <div class="code-block">for each voice mediation row:
+    rated_units = mediation.rated_units    # already pulse-rounded
+    call_type   = cdr.call_type            # local / STD / ISD
+    rate        = lookup(plan_id, "voice", call_type)
+
+    if plan.voice_unlimited_flag:
+        charge = 0.0
+    else:
+        free_used = min(free_remaining, rated_units / 60)
+        free_remaining -= free_used
+        chargeable_min  = max(0, rated_units/60 - free_used)
+        charge = chargeable_min * rate.rate_per_unit</div>
+
+    <div class="sub-header">Step C — Data charge with per-day FUP (Fix 3)</div>
+    <div class="code-block">for each data mediation row:
+    session_mb = mediation.normalized_usage_value
+    throttled  = data_session.throttled_flag
+
+    if throttled:
+        # post-FUP bytes charged at overage rate
+        normal_mb   = max(0, plan.daily_data_mb - daily_used_before)
+        overage_mb  = session_mb - normal_mb
+        charge = (normal_mb * rate.rate_per_unit) +
+                 (overage_mb * rate.overage_rate)
+    else:
+        charge = 0.0  # within free allowance</div>
+
+    <div class="sub-header">Step D — SMS charge with segment logic (Fix 2)</div>
+    <div class="code-block">for each sms mediation row:
+    billable_units = sms_detail.segment_count    # 1, 2, or 3
+    free_remaining_sms -= billable_units
+    chargeable = max(0, billable_units - free_remaining_sms)
+    charge = chargeable * rate.rate_per_unit</div>
+
+    <div class="sub-header">Step E — Inter-operator charge (Fix 2)</div>
+    <div class="code-block">if cdr.inter_operator_flag == True:
+    # override rate with STD/off-net rate
+    rate = lookup(plan_id, "voice", "STD")
+    # even if call_type was "local" — inter-op always gets STD rate</div>
+
+    <div class="sub-header">Step F — Anomaly injection with noise (Fix 4)</div>
+    <div class="code-block">ANOMALY TYPES and HOW:
+
+underbilling  (4%): apply free_voice mins to STD/ISD calls (wrong)
+                    → voice_charge is too low
+
+overbilling   (2%): apply peak rate to ALL calls ignoring time
+                    → voice_charge is too high
+
+tariff_mismatch(2%):use wrong plan's rates (old plan before upgrade)
+                    → charge based on previous_plan_id rates
+
+missing_cdr   (1%): skip 3–5 CDR rows for customer in one cycle
+                    → billing total < CDR total
+
+zero_charge   (1%): set one service charge to 0 (bug simulation)
+                    → data_charge or sms_charge = 0.0
+
+# Store the correct_expected_amount separately as ground truth
+correct_total_charge  = correctly computed amount
+actual_billed_charge  = amount after anomaly injection
+variance = correct_total_charge - actual_billed_charge</div>
+
+    <div class="sub-header">Step G — Final amount assembly</div>
+    <div class="code-block">base_charge    = plan.plan_price
+voice_charge   = (from Step B or anomaly version)
+data_charge    = (from Step C or anomaly version)
+sms_charge     = (from Step D)
+roaming_charge = (if any roaming CDRs)
+subtotal       = base_charge + voice_charge + data_charge +
+                 sms_charge + roaming_charge
+discount       = random 0–5% of subtotal
+tax_amount     = subtotal * 18%
+total_charge   = subtotal - discount + tax_amount
+
+# Ground truth label stored in anomaly_ground_truth.csv
+anomaly_type         = underbilling | overbilling | tariff_mismatch |
+                       missing_cdr | zero_charge | None
+correct_total_charge = amount without anomaly
+variance_amount      = correct_total_charge - total_charge</div>
+  </div>
+</div>
+
+<hr class="div"/>
+<p class="section-label">Complete fix checklist</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary);">
+    <strong style="color:var(--color-text-primary);display:block;margin-bottom:4px;">Fix 1 — CDR→Plan active lookup</strong>
+    get_active_plan(customer_id, event_time) called for every CDR row
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary);">
+    <strong style="color:var(--color-text-primary);display:block;margin-bottom:4px;">Fix 2 — Pulse + segment + inter-op billing</strong>
+    ceil(seconds/pulse)×pulse for voice. segment_count for SMS. STD rate for inter-op calls.
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary);">
+    <strong style="color:var(--color-text-primary);display:block;margin-bottom:4px;">Fix 3 — Per-day FUP</strong>
+    daily_usage tracked per (customer, date). FUP triggers when daily_mb > plan.daily_data_mb.
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary);">
+    <strong style="color:var(--color-text-primary);display:block;margin-bottom:4px;">Fix 4 — Realistic billing noise</strong>
+    5 anomaly types: underbilling, overbilling, tariff_mismatch, missing_cdr, zero_charge.
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary);">
+    <strong style="color:var(--color-text-primary);display:block;margin-bottom:4px;">Fix 5 — Mediation layer</strong>
+    New table. Rejects 1% valid CDRs. Marks duplicates. Normalises usage. Pulse rounding applied here.
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;font-size:12px;color:var(--color-text-secondary);">
+    <strong style="color:var(--color-text-primary);display:block;margin-bottom:4px;">Fix 6 — Roaming guard</strong>
+    CDR roaming only generated if customer.roaming_enabled = True AND plan allows it.
+  </div>
+</div>
+
+</div>
