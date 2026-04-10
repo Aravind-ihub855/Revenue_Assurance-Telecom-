@@ -51,6 +51,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
     { label: 'Customers', icon: Users, href: '/customers' },
     { label: 'Tariff Plans', icon: FileText, href: '/tariffs' },
+    { label: 'Lifecycle Data', icon: FileText, href: '/lifecycle' },
   ];
 
   return (

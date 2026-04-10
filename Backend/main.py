@@ -4,6 +4,7 @@ from service.database import init_db
 from feature.auth.router import router as auth_router
 from feature.tariff_plan.router import router as tariff_router
 from feature.customer.router import router as customer_router
+from feature.ingestion.router import router as ingestion_router
 
 # Initialize the psycopg2 database tables
 init_db()
@@ -21,3 +22,4 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(tariff_router)
 app.include_router(customer_router)
+app.include_router(ingestion_router)
