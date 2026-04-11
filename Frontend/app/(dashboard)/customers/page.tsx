@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, Filter, MoreVertical, Eye, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface Customer {
   customer_id: string;
@@ -34,10 +35,8 @@ export default function CustomersPage() {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/customers/');
-      if (!response.ok) throw new Error('Failed to fetch customers');
-      const data = await response.json();
-      setCustomers(data);
+      const response = await api.get('/api/customers/');
+      setCustomers(response.data);
     } catch (err: any) {
       setError(err.message);
     } finally {

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Upload, FileText, CheckCircle2, AlertCircle, Loader2, Database, Trash2, ArrowRight } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface PreviewData {
   table_name: string;
@@ -19,6 +20,7 @@ export default function LifecycleIngestionPage() {
   const [error, setError] = useState<string | null>(null);
   const [ingesting, setIngesting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [stats, setStats] = useState<{processed: number, skipped: number} | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -38,26 +40,16 @@ export default function LifecycleIngestionPage() {
     formData.append('file', file);
     
     try {
-      const response = await fetch(`http://localhost:8000/api/ingest/preview?table_name=${tableName}`, {
-        method: 'POST',
-        body: formData,
+      const response = await api.post(`/api/ingest/preview?table_name=${tableName}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || "Validation failed");
-      }
-      
-      const data = await response.json();
-      setPreview(data);
+      setPreview(response.data);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.detail || err.message);
     } finally {
       setUploading(false);
     }
   };
-
-  const [stats, setStats] = useState<{processed: number, skipped: number} | null>(null);
 
   const startIngestion = async () => {
     if (!preview || !preview.is_valid || !file) return;
@@ -67,22 +59,16 @@ export default function LifecycleIngestionPage() {
     formData.append('file', file);
     
     try {
-      const response = await fetch(`http://localhost:8000/api/ingest/commit?table_name=${tableName}`, {
-        method: 'POST',
-        body: formData,
+      const response = await api.post(`/api/ingest/commit?table_name=${tableName}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-      
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.detail || "Ingestion failed");
-      }
-      const data = await response.json();
+      const data = response.data;
       setStats({processed: data.rows_processed, skipped: data.rows_skipped_null_pk});
       setSuccess(true);
       setPreview(null);
       setFile(null);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response?.data?.detail || err.message);
     } finally {
       setIngesting(false);
     }

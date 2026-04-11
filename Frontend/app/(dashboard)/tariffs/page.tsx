@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, Loader2, AlertCircle, ChevronRight, PlaySquare } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { api } from '@/lib/api';
 
 interface TariffPlan {
   plan_id: string;
@@ -33,10 +34,8 @@ export default function TariffsPage() {
   const fetchTariffs = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/tariffs/');
-      if (!response.ok) throw new Error('Failed to fetch tariffs');
-      const data = await response.json();
-      setTariffs(data);
+      const response = await api.get('/api/tariffs/');
+      setTariffs(response.data);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -185,4 +184,3 @@ export default function TariffsPage() {
     </div>
   );
 }
-

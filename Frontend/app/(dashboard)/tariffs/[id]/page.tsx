@@ -7,6 +7,7 @@ import {
   Phone, Globe, Wifi, MessageSquare, Zap, ShieldCheck, 
   Calendar, Info, Loader2, AlertCircle 
 } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface TariffPlan {
   plan_id: string;
@@ -48,10 +49,8 @@ export default function TariffDetailPage() {
   const fetchTariffDetail = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8000/api/tariffs/${id}`);
-      if (!response.ok) throw new Error('Tariff plan not found');
-      const data = await response.json();
-      setTariff(data);
+      const response = await api.get(`/api/tariffs/${id}`);
+      setTariff(response.data);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -268,4 +267,3 @@ export default function TariffDetailPage() {
     </div>
   );
 }
-

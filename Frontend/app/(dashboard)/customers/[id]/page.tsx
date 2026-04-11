@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronLeft, User, Phone, MapPin, Activity, AlertTriangle, Receipt, CreditCard, Mail, Calendar, Smartphone, Loader2 } from 'lucide-react';
+import { api } from '@/lib/api';
 
 interface Customer {
   customer_id: string;
@@ -36,10 +37,8 @@ export default function CustomerDetailPage() {
   const fetchCustomer = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8000/api/customers/${id}`);
-      if (!response.ok) throw new Error('Customer not found');
-      const data = await response.json();
-      setCustomer(data);
+      const response = await api.get(`/api/customers/${id}`);
+      setCustomer(response.data);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -265,4 +264,3 @@ export default function CustomerDetailPage() {
     </div>
   );
 }
-
